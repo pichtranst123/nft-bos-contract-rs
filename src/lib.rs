@@ -6,14 +6,15 @@ use near_contract_standards::non_fungible_token::metadata::{
 };
 use near_contract_standards::non_fungible_token::NonFungibleToken;
 use near_contract_standards::non_fungible_token::{Token, TokenId};
-use near_sdk::Metadata;
+use crate::StorageKey::Metadata;
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::collections::{LazyOption, LookupMap, UnorderedMap, UnorderedSet, Vector};
 use near_sdk::json_types::{ValidAccountId, U128, U64};
 use near_sdk::{
-    assert_one_yocto, env, near_bindgen, serde_json::json, AccountId, Balance, BorshStorageKey,
+    assert_one_yocto, env, near_bindgen, serde_json::json, AccountId, BorshStorageKey,
     PanicOnDefault, Promise, PromiseOrValue, Gas, ext_contract,
 };
+use near_sdk::env::account_balance;
 use near_sdk::serde::{Deserialize, Serialize};
 use std::collections::{HashMap};
 use near_sdk::env::{is_valid_account_id};
@@ -34,7 +35,7 @@ const GAS_FOR_RESOLVE_TRANSFER: Gas = 10_000_000_000_000;
 const GAS_FOR_NFT_TRANSFER_CALL: Gas = 30_000_000_000_000 + GAS_FOR_RESOLVE_TRANSFER;
 const GAS_FOR_NFT_APPROVE: Gas = 10_000_000_000_000;
 const GAS_FOR_MINT: Gas = 90_000_000_000_000;
-const NO_DEPOSIT: Balance = 0;
+const NO_DEPOSIT: account_balance = 0;
 
 pub type TokenSeriesId = String;
 pub type MintBundleId = String;
@@ -84,7 +85,7 @@ pub struct TokenSeries {
     metadata: TokenMetadata,
     creator_id: AccountId,
     tokens: UnorderedSet<TokenId>,
-    price: Option<Balance>,
+    price: Option<account_balance>,
     is_mintable: bool,
     royalty: HashMap<AccountId, u32>,
 }
@@ -102,7 +103,7 @@ pub struct TokenSeriesJson {
 pub struct MintBundle {
     token_series_ids: Option<Vector<TokenSeriesId>>,
     token_ids: Option<Vector<TokenId>>,
-    price: Option<Balance>,
+    price: Option<account_balance>,
     limit_buy: Option<u32>,
     bought_account_ids: LookupMap<AccountId, u32>,
 }
@@ -1163,7 +1164,7 @@ impl Contract {
     pub fn nft_payout(
         &self,
         token_id: TokenId,
-        balance: U128,
+        account_balance: U128,
         max_len_payout: u32,
     ) -> Payout {
         let owner_id = self.tokens.owner_by_id.get(&token_id).expect("No token id");
@@ -1173,7 +1174,7 @@ impl Contract {
 
         assert!(royalty.len() as u32 <= max_len_payout, "Market cannot payout to that many receivers");
 
-        let balance_u128: u128 = balance.into();
+        let balance_u128: u128 = account_balance.into();
 
         let mut payout: Payout = Payout { payout: HashMap::new() };
         let mut total_perpetual = 0;
@@ -1195,7 +1196,7 @@ impl Contract {
         receiver_id: ValidAccountId,
         token_id: TokenId,
         approval_id: Option<u64>,
-        balance: Option<U128>,
+        account_balance: Option<U128>,
         max_len_payout: Option<u32>,
     ) -> Option<Payout> {
         assert_one_yocto();
@@ -1208,8 +1209,8 @@ impl Contract {
         // Payout calculation
         let previous_owner_id = previous_token.owner_id;
         let mut total_perpetual = 0;
-        let payout = if let Some(balance) = balance {
-            let balance_u128: u128 = u128::from(balance);
+        let payout = if let Some(account_balance) = account_balance {
+            let balance_u128: u128 = u128::from(account_balance);
             let mut payout: Payout = Payout { payout: HashMap::new() };
 
             let mut token_id_iter = token_id.split(TOKEN_DELIMETER);
@@ -1258,7 +1259,7 @@ impl Contract {
     }
 }
 
-fn royalty_to_payout(a: u32, b: Balance) -> U128 {
+fn royalty_to_payout(a: u32, b: account_balance) -> U128 {
     U128(a as u128 * b / 10_000u128)
 }
 
@@ -1307,8 +1308,8 @@ impl NonFungibleTokenResolver for Contract {
 
 /// from https://github.com/near/near-sdk-rs/blob/e4abb739ff953b06d718037aa1b8ab768db17348/near-contract-standards/src/non_fungible_token/utils.rs#L29
 
-fn refund_deposit(storage_used: u64, extra_spend: Balance) {
-    let required_cost = env::storage_byte_cost() * Balance::from(storage_used);
+fn refund_deposit(storage_used: u64, extra_spend: account_balance) {
+    let required_cost = env::storage_byte_cost() * account_balance::from(storage_used);
     let attached_deposit = env::attached_deposit() - extra_spend;
 
     assert!(
@@ -1340,8 +1341,8 @@ mod tests {
     use near_sdk::{testing_env};
     use serde_with::with_prefix;
 
-    const STORAGE_FOR_CREATE_SERIES: Balance = 8540000000000000000000;
-    const STORAGE_FOR_MINT: Balance = 11280000000000000000000;
+    const STORAGE_FOR_CREATE_SERIES: account_balance = 8540000000000000000000;
+    const STORAGE_FOR_MINT: account_balance = 11280000000000000000000;
 
     fn get_context(predecessor_account_id: ValidAccountId) -> VMContextBuilder {
         let mut builder = VMContextBuilder::new();
