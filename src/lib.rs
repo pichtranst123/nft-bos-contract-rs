@@ -35,7 +35,7 @@ const GAS_FOR_RESOLVE_TRANSFER: Gas = 10_000_000_000_000;
 const GAS_FOR_NFT_TRANSFER_CALL: Gas = 30_000_000_000_000 + GAS_FOR_RESOLVE_TRANSFER;
 const GAS_FOR_NFT_APPROVE: Gas = 10_000_000_000_000;
 const GAS_FOR_MINT: Gas = 90_000_000_000_000;
-const NO_DEPOSIT: account_balance = 0;
+const NO_DEPOSIT: u128 = 0;
 
 pub type TokenSeriesId = String;
 pub type MintBundleId = String;
