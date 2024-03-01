@@ -1,19 +1,69 @@
-pich@pich-VirtualBox:~/contract/nft-bos-rs$ cargo build --target wasm32-unknown-unknown --release
-   Compiling getrandom v0.2.12
-error: the wasm*-unknown-unknown targets are not supported by default, you may need to enable the "js" feature. For more information see: https://docs.rs/getrandom/#webassembly-support
-   --> /home/pich/.cargo/registry/src/index.crates.io-6f17d22bba15001f/getrandom-0.2.12/src/lib.rs:291:9
-    |
-291 | /         compile_error!("the wasm*-unknown-unknown targets are not supported by \
-292 | |                         default, you may need to enable the \"js\" feature. \
-293 | |                         For more information see: \
-294 | |                         https://docs.rs/getrandom/#webassembly-support");
-    | |________________________________________________________________________^
+error: failed to run custom build command for `secp256k1-sys v0.8.1`
 
-error[E0433]: failed to resolve: use of undeclared crate or module `imp`
-   --> /home/pich/.cargo/registry/src/index.crates.io-6f17d22bba15001f/getrandom-0.2.12/src/lib.rs:347:9
-    |
-347 |         imp::getrandom_inner(dest)?;
-    |         ^^^ use of undeclared crate or module `imp`
+Caused by:
+  process didn't exit successfully: `/home/pich/contract/nft-bos-rs/target/release/build/secp256k1-sys-05e2c742e7310f1a/build-script-build` (exit status: 1)
+  --- stdout
+  TARGET = Some("wasm32-unknown-unknown")
+  OPT_LEVEL = Some("z")
+  HOST = Some("x86_64-unknown-linux-gnu")
+  cargo:rerun-if-env-changed=CC_wasm32-unknown-unknown
+  CC_wasm32-unknown-unknown = None
+  cargo:rerun-if-env-changed=CC_wasm32_unknown_unknown
+  CC_wasm32_unknown_unknown = None
+  cargo:rerun-if-env-changed=TARGET_CC
+  TARGET_CC = None
+  cargo:rerun-if-env-changed=CC
+  CC = None
+  cargo:rerun-if-env-changed=CRATE_CC_NO_DEFAULTS
+  CRATE_CC_NO_DEFAULTS = None
+  DEBUG = Some("false")
+  cargo:rerun-if-env-changed=CFLAGS_wasm32-unknown-unknown
+  CFLAGS_wasm32-unknown-unknown = None
+  cargo:rerun-if-env-changed=CFLAGS_wasm32_unknown_unknown
+  CFLAGS_wasm32_unknown_unknown = None
+  cargo:rerun-if-env-changed=TARGET_CFLAGS
+  TARGET_CFLAGS = None
+  cargo:rerun-if-env-changed=CFLAGS
+  CFLAGS = None
+  cargo:rerun-if-env-changed=CC_wasm32-unknown-unknown
+  CC_wasm32-unknown-unknown = None
+  cargo:rerun-if-env-changed=CC_wasm32_unknown_unknown
+  CC_wasm32_unknown_unknown = None
+  cargo:rerun-if-env-changed=TARGET_CC
+  TARGET_CC = None
+  cargo:rerun-if-env-changed=CC
+  CC = None
+  cargo:rerun-if-env-changed=CRATE_CC_NO_DEFAULTS
+  CRATE_CC_NO_DEFAULTS = None
+  cargo:rerun-if-env-changed=CFLAGS_wasm32-unknown-unknown
+  CFLAGS_wasm32-unknown-unknown = None
+  cargo:rerun-if-env-changed=CFLAGS_wasm32_unknown_unknown
+  CFLAGS_wasm32_unknown_unknown = None
+  cargo:rerun-if-env-changed=TARGET_CFLAGS
+  TARGET_CFLAGS = None
+  cargo:rerun-if-env-changed=CFLAGS
+  CFLAGS = None
+  cargo:rerun-if-env-changed=CC_ENABLE_DEBUG_OUTPUT
+  cargo:rerun-if-env-changed=CC_wasm32-unknown-unknown
+  CC_wasm32-unknown-unknown = None
+  cargo:rerun-if-env-changed=CC_wasm32_unknown_unknown
+  CC_wasm32_unknown_unknown = None
+  cargo:rerun-if-env-changed=TARGET_CC
+  TARGET_CC = None
+  cargo:rerun-if-env-changed=CC
+  CC = None
+  cargo:rerun-if-env-changed=CRATE_CC_NO_DEFAULTS
+  CRATE_CC_NO_DEFAULTS = None
+  cargo:rerun-if-env-changed=CFLAGS_wasm32-unknown-unknown
+  CFLAGS_wasm32-unknown-unknown = None
+  cargo:rerun-if-env-changed=CFLAGS_wasm32_unknown_unknown
+  CFLAGS_wasm32_unknown_unknown = None
+  cargo:rerun-if-env-changed=TARGET_CFLAGS
+  TARGET_CFLAGS = None
+  cargo:rerun-if-env-changed=CFLAGS
+  CFLAGS = None
 
-For more information about this error, try `rustc --explain E0433`.
-error: could not compile `getrandom` (lib) due to 2 previous errors
+  --- stderr
+
+
+  error occurred: Failed to find tool. Is `clang` installed?
