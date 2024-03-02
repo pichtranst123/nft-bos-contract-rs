@@ -598,7 +598,7 @@ impl Contract {
     }
 
     #[payable]
-    pub fn nft_set_series_price(&mut self, token_series_id: TokenSeriesId, price: Option<>) -> Option<> {
+    pub fn nft_set_series_price(&mut self, token_series_id: TokenSeriesId, price: Option<u128>) -> Option<u128> {
         assert_one_yocto();
 
         let mut token_series = self.token_series_by_id.get(&token_series_id).expect("Token series not exist");
